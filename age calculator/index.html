@@ -1,0 +1,105 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <h1>Age Calculator</h1>
+        <div class="input-wrapper">
+            <input type="date" class="date" id="date-input">
+            <button class="btn" id="cal-btn" onclick="ageCalculator()">Calculate</button>
+        </div>
+        <div class="output-wrapper">
+            <div>
+            <span id="year">-</span>
+            <p>Year</p>
+            </div>
+            <div>
+            <span id="months">-</span>
+            <p>Months</p>
+            </div>
+            <div>
+            <span id="day">-</span>
+            <p>Days</p>
+            </div>
+        </div>
+    </div>
+
+<!--javaScript-->
+    <script>
+    const months =[31,28,31,30,31,30,31,31,30,31,30,31];
+
+    function ageCalculator(){
+        let inputDate = new Date(document.getElementById("date-input").value);
+        let d1, y1 , m1;
+        let birthDetails ={
+            date: inputDate.getDate(),
+            month: inputDate.getMonth() +1,
+            year: inputDate.getFullYear()
+        }
+
+        /*current date*/
+        let today = new Date();
+        let d2 = today.getDate();
+        let m2 = today.getMonth() +1;
+        let y2 = today.getFullYear();
+
+        /*leap year check function*/
+        leapYearCheck(y2);
+
+        if(
+            birthDetails.year > y2 || 
+            (birthDetails.month >m2 && birthDetails.year == y2) ||
+            (birthDetails.date > d2 && birthDetails.month == m2 && birthDetails.year == y2)
+        ){
+            alert("NOT BORN YET");
+            displayResult("-","-","-");
+            return;
+        }
+
+        /*age calculate*/
+        let y3, m3, d3;
+        y3 = y2-birthDetails.year;
+        if(birthDetails.month<=m2 ){
+            m3 = m2-birthDetails.month;
+        }else{
+            y3--;
+            m3 = 12 + m2 -birthDetails.month;
+        }
+
+        if(birthDetails.date <= d2){
+            d3 = d2 - birthDetails.date;
+        }else{
+            m3--;
+            let days = months[m2 -2];
+            d3 = days + d2 - birthDetails.date;
+            if(m3 <0){
+                m3 = 11;
+                y3 --;
+            }
+        }
+    /* display output*/
+    displayResult(d3, m3, y3);
+}
+
+    function leapYearCheck(){
+        if(year % 4 == 0 || (year%100 ==0 && year%400 ==0)){
+           months[1] =29; 
+        }
+        else{
+            months[1] = 28;
+        }
+
+    }
+    function displayResult(bDate, bMonth, bYear){
+        document.getElementById("year").textContent = bYear;
+        document.getElementById("months").textContent = bMonth;
+        document.getElementById("day").textContent = bDate;
+    }
+
+    </script>
+</body>
+</html>
